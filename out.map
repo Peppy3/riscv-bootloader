@@ -1,0 +1,116 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0x0000000080200000                . = 0x80200000
+                0x0000000080200000                __start = .
+                0x0000000080200000                __text_start = .
+
+.text           0x0000000080200000     0x1000
+ *(.text.entry)
+ .text.entry    0x0000000080200000       0x30 build/entry.o
+                0x0000000080200000                _entry
+                0x000000008020002c                spin
+ *(.text)
+ .text          0x0000000080200030        0x0 build/entry.o
+ .text          0x0000000080200030       0x2c build/main.o
+                0x0000000080200030                main
+                0x0000000080200046                multi_main
+                0x0000000080201000                . = ALIGN (0x1000)
+ *fill*         0x000000008020005c      0xfa4 
+                0x0000000080201000                __trampoline_start = .
+ *(.trampoline)
+
+.rela.dyn       0x0000000080201000        0x0
+ .rela.got      0x0000000080201000        0x0 build/entry.o
+                0x0000000080201000                . = ALIGN (0x1000)
+                0x0000000080201000                __text_end = .
+                0x0000000080201000                __rodata_start = .
+
+.rodata
+ *(.rodata)
+                0x0000000080201000                . = ALIGN (0x1000)
+                0x0000000080201000                __rodata_end = .
+                0x0000000080201000                __data_start = .
+
+.data           0x0000000080201000        0x0
+ *(.data)
+ .data          0x0000000080201000        0x0 build/entry.o
+ .data          0x0000000080201000        0x0 build/main.o
+
+.got            0x0000000080201000       0x20
+ .got           0x0000000080201000       0x20 build/entry.o
+                0x0000000080201000                _GLOBAL_OFFSET_TABLE_
+
+.got.plt        0x0000000080201020       0x10
+ .got.plt       0x0000000080201020       0x10 build/entry.o
+                0x0000000080202000                . = ALIGN (0x1000)
+                0x0000000080202000                __data_end = .
+                0x0000000080202000                __bss_start = .
+
+.bss            0x0000000080202000     0x3000
+                0x0000000080202000                bss = .
+ *(.bss)
+ .bss           0x0000000080202000        0x0 build/entry.o
+ .bss           0x0000000080202000     0x3000 build/main.o
+                0x0000000080202000                MULTI_JMP
+                0x0000000080203000                multi_stack
+                0x0000000080204000                main_stack
+                0x0000000080205000                . = ALIGN (0x1000)
+                0x0000000080205000                __bss_end = .
+                0x0000000000003000                __bss_size = (__bss_end - __bss_start)
+                0x0000000080205000                __end = .
+LOAD build/entry.o
+LOAD build/main.o
+OUTPUT(boot.elf elf64-littleriscv)
+
+.riscv.attributes
+                0x0000000000000000       0x33
+ .riscv.attributes
+                0x0000000000000000       0x2e build/entry.o
+ .riscv.attributes
+                0x000000000000002e       0x33 build/main.o
+
+.comment        0x0000000000000000       0x2b
+ .comment       0x0000000000000000       0x2b build/main.o
+                                         0x2c (size before relaxing)
+
+.note.GNU-stack
+                0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 build/main.o
+
+.debug_info     0x0000000000000000      0x17a
+ .debug_info    0x0000000000000000      0x17a build/main.o
+
+.debug_abbrev   0x0000000000000000       0xde
+ .debug_abbrev  0x0000000000000000       0xde build/main.o
+
+.debug_loclists
+                0x0000000000000000       0xb4
+ .debug_loclists
+                0x0000000000000000       0xb4 build/main.o
+
+.debug_aranges  0x0000000000000000       0x30
+ .debug_aranges
+                0x0000000000000000       0x30 build/main.o
+
+.debug_line     0x0000000000000000       0xba
+ .debug_line    0x0000000000000000       0xba build/main.o
+
+.debug_str      0x0000000000000000      0x100
+ .debug_str     0x0000000000000000      0x100 build/main.o
+                                        0x127 (size before relaxing)
+
+.debug_line_str
+                0x0000000000000000       0x6e
+ .debug_line_str
+                0x0000000000000000       0x6e build/main.o
+                                         0x9e (size before relaxing)
+
+.debug_frame    0x0000000000000000       0x60
+ .debug_frame   0x0000000000000000       0x60 build/main.o
